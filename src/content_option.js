@@ -7,30 +7,30 @@ const meta = {
 const introdata = {
     title: "I’m James Ouyang",
     animated: {
-        first: "I love coding",
+        first: "I love solving problems",
         second: "I like Ronnie",
         third: "I develop fun and useful apps",
     },
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at nisl euismod urna bibendum",
-    your_img_url: "https://images.unsplash.com/photo-1514790193030-c89d266d5a9d",
+    description: "BAAAAAAAAAAAAAAAAAAAAASDHSAJKDHSLAJKD",
+    your_img_url: "https://i5.walmartimages.com/asr/d4757ba5-4e58-4253-b0a6-99f7d72e8acf.eea4775314ffe4a9041746a3953f35af.jpeg",
 };
 
 const dataabout = {
     title: "abit about my self",
-    aboutme: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis dolor id ligula semper elementum feugiat pretium nulla. Nunc non commodo dolor. Nunc mollis dignissim facilisis. Morbi ut magna ultricies.",
+    aboutme: "BAAAAAAAAAAAAAAAAAAAAASDHSAJKDHSLAJKD",
 };
 const worktimeline = [{
-        jobtitle: "Designer of week",
+        jobtitle: "SDFSDFSDF",
         where: "YAdfi",
         date: "2020",
     },
     {
-        jobtitle: "Designer of week",
+        jobtitle: "SDFDSFDSFDS",
         where: "Jamalya",
         date: "2019",
     },
     {
-        jobtitle: "Designer of week",
+        jobtitle: "SDFSDFDSFSDFDSFSDFDSF",
         where: "ALquds",
         date: "2019",
     },
@@ -41,7 +41,7 @@ const skills = [{
         value: 90,
     },
     {
-        name: "Django",
+        name: "SQL",
         value: 85,
     },
     {
@@ -53,7 +53,7 @@ const skills = [{
         value: 60,
     },
     {
-        name: "Jquery",
+        name: "C++",
         value: 85,
     },
 ];
