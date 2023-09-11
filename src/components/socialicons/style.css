@@ -18,9 +18,9 @@
     height: 1.3em;
     fill: var(--text-color)
 }
-
+/* TEXT */
 .stick_follow_icon p {
-    top: 70px;
+    top: 90px;
     left: -24px;
     width: 68px;
     height: 20px;
@@ -40,11 +40,11 @@
     margin-bottom: 10px;
     transition: all .3s;
 }
-
+/* LINE */
 .stick_follow_icon p:after {
     top: 9px;
-    right: -48px;
-    width: 40px;
+    right: -69px;
+    width: 31px;
     height: 1px;
     content: "";
     display: block;

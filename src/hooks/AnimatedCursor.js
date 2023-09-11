@@ -90,13 +90,13 @@ function useEventListener(eventName, handler, element = document) {
 function CursorCore({
     outerStyle,
     innerStyle,
-    color = '220, 90, 90',
+    color = '0, 0, 0',
     outerAlpha = 0.3,
-    innerSize = 8,
-    outerSize = 8,
+    innerSize = 80,
+    outerSize = 80,
     outerScale = 6,
     innerScale = 0.6,
-    trailingSpeed = 8,
+    trailingSpeed = 5,
     clickables = [
       'a',
       'input[type="text"]',
@@ -116,7 +116,7 @@ function CursorCore({
     const requestRef = useRef()
     const previousTimeRef = useRef()
     const [coords, setCoords] = useState({ x: 0, y: 0 })
-    const [isVisible, setIsVisible] = useState(false)
+    const [isVisible, setIsVisible] = useState(true)
     const [isActive, setIsActive] = useState(false)
     const [isActiveClickable, setIsActiveClickable] = useState(false)
     let endX = useRef(0)
@@ -160,13 +160,13 @@ function CursorCore({
     const onMouseDown = useCallback(() => setIsActive(true), [])
     const onMouseUp = useCallback(() => setIsActive(false), [])
     const onMouseEnterViewport = useCallback(() => setIsVisible(true), [])
-    const onMouseLeaveViewport = useCallback(() => setIsVisible(false), [])
+    // const onMouseLeaveViewport = useCallback(() => setIsVisible(false), [])
   
     useEventListener('mousemove', onMouseMove)
     useEventListener('mousedown', onMouseDown)
     useEventListener('mouseup', onMouseUp)
     useEventListener('mouseover', onMouseEnterViewport)
-    useEventListener('mouseout', onMouseLeaveViewport)
+    // useEventListener('mouseout', onMouseLeaveViewport)
   
     // Cursors Hover/Active State
     useEffect(() => {
@@ -197,8 +197,8 @@ function CursorCore({
         cursorInnerRef.current.style.opacity = 1
         cursorOuterRef.current.style.opacity = 1
       } else {
-        cursorInnerRef.current.style.opacity = 0
-        cursorOuterRef.current.style.opacity = 0
+        cursorInnerRef.current.style.opacity = 1
+        cursorOuterRef.current.style.opacity = 1
       }
     }, [isVisible])
   
@@ -260,7 +260,7 @@ function CursorCore({
         width: innerSize,
         height: innerSize,
         pointerEvents: 'none',
-        backgroundColor: `rgba(${color}, 1)`,
+        backgroundColor: `rgba(${color}, 0.5)`,
         ...(innerStyle && innerStyle),
         transition: 'opacity 0.15s ease-in-out, transform 0.25s ease-in-out'
       },
@@ -280,7 +280,7 @@ function CursorCore({
     }
   
     // Hide / Show global cursor
-    document.body.style.cursor = 'none'
+    document.body.style.cursor = 'auto'
   
     return (
       <React.Fragment>

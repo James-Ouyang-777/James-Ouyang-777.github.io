@@ -3,11 +3,19 @@ import "./style.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Container, Row, Col } from "react-bootstrap";
 import { dataportfolio, meta } from "../../content_option";
+import { Donna } from "../Donna";
 
 export const Portfolio = () => {
   return (
+    
     <HelmetProvider>
       <Container className="About-header">
+      {/* <iframe
+        src="https://jaymz777-donna.hf.space"
+        frameborder="0"
+        width="1200"
+        height="600"
+      ></iframe> */}
         <Helmet>
           <meta charSet="utf-8" />
           <title> Portfolio | {meta.title} </title>{" "}
@@ -27,6 +35,9 @@ export const Portfolio = () => {
                 <div className="content">
                   <p>{data.description}</p>
                   <a href={data.link}>view project</a>
+
+
+
                 </div>
               </div>
             );

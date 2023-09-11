@@ -4,6 +4,10 @@
     }
 }
 
+.zoomed-in {
+    zoom: 100%; /* Adjust the percentage value to control the zoom level */
+  }
+
 .page-enter {
     transform: translateY(100%);
 }
