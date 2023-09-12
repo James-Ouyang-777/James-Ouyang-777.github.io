@@ -88,7 +88,7 @@ const services = [{
 const dataportfolio = [{
         img: "https://imgur.com/6MESHnF.png",
         description: "The Donna: your very own personal legal secretary chatbot. ",
-        link: "/Donna",
+        link: "/donna",
     },
     {
         img: "https://picsum.photos/400/800/?grayscale",

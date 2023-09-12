@@ -4,6 +4,8 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Container, Row, Col } from "react-bootstrap";
 import { dataportfolio, meta } from "../../content_option";
 import { Donna } from "../Donna";
+import { Link } from "react-router-dom";
+
 
 export const Portfolio = () => {
   return (
@@ -34,7 +36,14 @@ export const Portfolio = () => {
                 <img src={data.img} alt="" />
                 <div className="content">
                   <p>{data.description}</p>
-                  <a href={data.link}>view project</a>
+                  {i === 0 ? (
+                    <Link to="/donna" className="my-3">
+                      view project
+                  </Link>
+                    ) : (
+                      <a href={data.link}>view project</a>
+                      )}
+                  {/* <a href={data.link}>view project</a> */}
 
 
 
