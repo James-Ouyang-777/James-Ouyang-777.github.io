@@ -12,12 +12,6 @@ export const Portfolio = () => {
     
     <HelmetProvider>
       <Container className="About-header">
-      {/* <iframe
-        src="https://jaymz777-donna.hf.space"
-        frameborder="0"
-        width="1200"
-        height="600"
-      ></iframe> */}
         <Helmet>
           <meta charSet="utf-8" />
           <title> Portfolio | {meta.title} </title>{" "}
@@ -29,29 +23,27 @@ export const Portfolio = () => {
             <hr className="t_border my-4 ml-0 text-left" />
           </Col>
         </Row>
-        <div className="mb-5 po_items_ho">
-          {dataportfolio.map((data, i) => {
-            return (
-              <div key={i} className="po_item">
+        <Row className="mb-5 po_items_ho">
+          {dataportfolio.map((data, i) => (
+            <Col key={i} 
+            md='3'
+            > {/* You can adjust the size of the columns according to your needs */}
+              <div className="po_item">
                 <img src={data.img} alt="" />
                 <div className="content">
                   <p>{data.description}</p>
                   {i === 0 ? (
                     <Link to="/donna" className="my-3">
                       view project
-                  </Link>
-                    ) : (
-                      <a href={data.link}>view project</a>
-                      )}
-                  {/* <a href={data.link}>view project</a> */}
-
-
-
+                    </Link>
+                  ) : (
+                    <a href={data.link}>view project</a>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </Col>
+          ))}
+      </Row>
       </Container>
     </HelmetProvider>
   );
