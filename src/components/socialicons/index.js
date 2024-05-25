@@ -7,6 +7,9 @@ import {
   FaLinkedin,
   FaYoutube,
   FaTwitch,
+  FaVoicemail,
+  FaMailBulk,
+  FaMailchimp,
 } from "react-icons/fa";
 import { socialprofils } from "../../content_option";
 
@@ -14,13 +17,13 @@ export const Socialicons = (params) => {
   return (
     <div className="stick_follow_icon">
       <ul>
-        {/* {socialprofils.twitter && (
+        {socialprofils.email && (
           <li>
-            <a href={socialprofils.twitter}>
-              <FaTwitter />
+            <a href={socialprofils.email}>
+              <FaMailBulk />
             </a>
           </li>
-        )} */}
+        )}
         {socialprofils.github && (
           <li>
             <a href={socialprofils.github}>

@@ -8,20 +8,20 @@ const introdata = {
     title: "Hi 👋, \n I’m James Ouyang",
     animated: {
         first: "I love solving problems",
-        second: "I believe in a promising future for AI",
-        third: "I build fun (& sometimes useful) software",
+        second: "I believe in a promising future for software & AI",
+        third: "I build fun (& sometimes useful) AI projects",
     },
-    description: "Data Scientist, Fullstack AI/ML engineer. Check out My Portfolio 👇 to see some of my most interesting work! ",
+    description: "Data Scientist, AI/ML software engineer. Check out My Portfolio 👇 to see some of my most interesting work! ",
     your_img_url: "https://i.imgur.com/79m29zq.png",
 };
 
 const dataabout = {
     title: "A bit about my self",
-    aboutme: "I am an upcoming Computer Science graduate at the University of Waterloo. With only two terms of coursework remaining to complete, I am pursuing an employment \n environment that will allow my skills & potential to flourish both in an internship setting and potentially as a returning full-time upon graduation.  ",
+    aboutme: "I am an upcoming Computer Science graduate at the University of Waterloo. With only 6 months of coursework remaining to complete, I am pursuing a challenging and"+"\n"+"stimulating work environment that will allow my skills & potential to flourish both in an internship \n setting and potentially as a returning full-time upon graduation.  ",
 };
 const worktimeline = [
     {
-        jobtitle: "ML Platform Software Engineer",
+        jobtitle: "ML Software Engineer",
         where: "ODAIA",
         date: "January 2024 - April 2024",
     },
@@ -45,11 +45,11 @@ const worktimeline = [
         where: "Microsoft",
         date: "May 2021 - August 2021",
     },
-    {
-        jobtitle: "Data Engineer",
-        where: "BMT",
-        date: "December 2020 - April 2021",
-    },
+    // {
+    //     jobtitle: "Data Engineer",
+    //     where: "BMT",
+    //     date: "December 2020 - April 2021",
+    // },
 
 ];
 
@@ -112,7 +112,7 @@ const dataportfolio = [{
 
     {
         img: "https://i.imgur.com/9Txw70T.png",
-        description: "Economy Dashboard",
+        description: "Stock Trading Insights",
         link: "https://jamesouyangfinsight.streamlit.app/",
     },
     {
@@ -191,6 +191,7 @@ const socialprofils = {
     facebook: "https://facebook.com",
     linkedin: "https://www.linkedin.com/in/james-ouyang/",
     twitter: "https://twitter.com",
+    email: "mailto:jamesouyang02@gmail.com"
 };
 export {
     meta,
