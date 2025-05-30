@@ -11,7 +11,7 @@ const introdata = {
         second: "I believe in a promising future for software & AI",
         third: "I build fun (& sometimes useful) AI projects",
     },
-    description: "Aspiring quant, AI/ML engineer. Check out My Portfolio 👇 to see some of my most interesting work! ",
+    description: "Aspiring quant, AI/ML engineer. Check out My Portfolio to see 👇 some of my most interesting work! ",
     your_img_url: "https://i.imgur.com/79m29zq.png",
 };
 
