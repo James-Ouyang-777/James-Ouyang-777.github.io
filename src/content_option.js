@@ -1,39 +1,39 @@
 const logotext = "JAMES";
 const meta = {
     title: "James Ouyang",
-    description: "I’m James Ouyang data scientist _ Full stack devloper",
+    description: "I'm James Ouyang data scientist _ Full stack devloper",
 };
 
 const introdata = {
-    title: "Hi 👋, \n I’m James Ouyang",
+    title: "Hi 👋, \n I'm James Ouyang",
     animated: {
         first: "I love solving problems",
         second: "I believe in a promising future for software & AI",
         third: "I build fun (& sometimes useful) AI projects",
     },
-    description: "Data Scientist, AI/ML software engineer. Check out My Portfolio 👇 to see some of my most interesting work! ",
+    description: "Aspiring quant, AI/ML engineer. Check out My Portfolio 👇 to see some of my most interesting work! ",
     your_img_url: "https://i.imgur.com/79m29zq.png",
 };
 
 const dataabout = {
     title: "A bit about my self",
-    aboutme: "I am an upcoming Computer Science graduate at the University of Waterloo. With only 6 months of coursework remaining to complete, I am pursuing a challenging and"+"\n"+"stimulating work environment that will allow my skills & potential to flourish both in an internship \n setting and potentially as a returning full-time upon graduation.  ",
+    aboutme: "I am a recent Computer Science graduate from the University of Waterloo, actively seeking full-time opportunities. I'm looking for a challenging and stimulating work environment where I can apply my skills, grow professionally, and contribute meaningfully to impactful projects.",
 };
 const worktimeline = [
     {
-        jobtitle: "ML Software Engineer",
+        jobtitle: "Quantitative Researcher",
+        where: "Trexquant Investment LP",
+        date: "September 2024 - December 2025",
+    },
+    {
+        jobtitle: "ML Engineer",
         where: "ODAIA",
         date: "January 2024 - April 2024",
     },
     {
-        jobtitle: "AI/ML Team Lead",
+        jobtitle: "AI/ML Engineer",
         where: "Genellipse",
-        date: "May 2023 - December 2023",
-    },
-    {
-        jobtitle: "Data Scientist",
-        where: "Genellipse",
-        date: "September 2022 - April 2023",
+        date: "September 2022 - December 2023",
     },
     {
     jobtitle: "Data Scientist",
@@ -41,7 +41,7 @@ const worktimeline = [
     date: "January 2022 - August 2022",
     },
     {
-        jobtitle: "AI Research",
+        jobtitle: "AI Research Intern",
         where: "Microsoft",
         date: "May 2021 - August 2021",
     },
@@ -55,24 +55,24 @@ const worktimeline = [
 
 const skills = [{
         name: "Python",
-        value: 90,
+        value: 95,
     },
     {
         name: "SQL",
-        value: 85,
+        value: 90,
     },
     {
         name: "C++",
         value: 85,
     },
-    {
-        name: "Javascript",
-        value: 80,
-    },
-    {
-        name: "React",
-        value: 70,
-    },
+    // {
+    //     name: "Javascript",
+    //     value: 80,
+    // },
+    // {
+    //     name: "React",
+    //     value: 70,
+    // },
 
 ];
 
@@ -94,10 +94,18 @@ const services = [{
     },
 ];
 
-const dataportfolio = [{
+const dataportfolio = [
+    
+    {
         img: "https://imgur.com/6MESHnF.png",
         description: "The Donna: your very own personal legal secretary chatbot. ",
         link: "/donna",
+    },
+
+    {
+        img: require("./assets/images/icon2.webp"),
+        description: "PromptTester: A/B Testing Framework for LLM Prompts",
+        link: "https://github.com/James-Ouyang-777/PromptTester",
     },
     // {
     //     img: "https://i.imgur.com/qXwG4y9.png",
@@ -166,7 +174,7 @@ const dataportfolio = [{
 
 const contactConfig = {
     YOUR_EMAIL: "j23ouyan@uwaterloo.ca",
-    YOUR_FONE: "(647)890-3584",
+    YOUR_FONE: "(647)-890-3584",
     // description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vehicula eu nunc et sollicitudin. Cras pulvinar, nisi at imperdiet pharetra. ",
     // creat an emailjs.com account 
     // check out this tutorial https://www.emailjs.com/docs/examples/reactjs/
