@@ -1,7 +1,7 @@
 const logotext = "JAMES";
 const meta = {
     title: "James Ouyang",
-    description: "I'm James Ouyang data scientist _ Full stack devloper",
+    description: "I'm James Ouyang",
 };
 
 const introdata = {
@@ -95,13 +95,17 @@ const services = [{
 ];
 
 const dataportfolio = [
-    
     {
         img: "https://imgur.com/6MESHnF.png",
         description: "The Donna: your very own personal legal secretary chatbot. ",
         link: "/donna",
     },
-
+    {
+        img: "https://i.imgur.com/9Txw70T.png",
+        description: "Stock Trading Insights",
+        link: "https://data-dashboard-777.streamlit.app/",
+    },
+    
     {
         img: require("./assets/images/icon2.webp"),
         description: "PromptTester: A/B Testing Framework for LLM Prompts",
@@ -118,11 +122,7 @@ const dataportfolio = [
     //     link: "#",
     // },
 
-    {
-        img: "https://i.imgur.com/9Txw70T.png",
-        description: "Stock Trading Insights",
-        link: "https://jamesouyangfinsight.streamlit.app/",
-    },
+
     {
         img: "https://i.imgur.com/OAQPOKI.png",
         description: "Computer Vision Animal Identifier",
