@@ -8,30 +8,30 @@ const introdata = {
     title: "Hi 👋, \n I'm James Ouyang",
     animated: {
         first: "I love solving problems",
-        second: "I believe in a promising future for software & AI",
-        third: "I build fun (& sometimes useful) AI projects",
+        // second: "I believe in a promising future for software & AI",
+        third: "I build fun (& sometimes useful) projects",
     },
-    description: "Aspiring quant, AI/ML engineer. Check out My Portfolio to see 👇 some of my most interesting work! ",
+    description: "Computer Science graduate with experience in quantitative analysis, system engineering, and data systems. Check out My Portfolio to see 👇 some of my most interesting work! ",
     your_img_url: "https://i.imgur.com/79m29zq.png",
 };
 
 const dataabout = {
     title: "A bit about my self",
-    aboutme: "I am a recent Computer Science graduate from the University of Waterloo, actively seeking full-time opportunities. I'm looking for a challenging and stimulating work environment where I can apply my skills, grow professionally, and contribute meaningfully to impactful projects.",
+    aboutme: "I am a Computer Science graduate from the University of Waterloo with experience in quantitative analysis, system engineering, and data systems. I have worked at companies like Trexquant Investment LP, ODAIA, and Genellipse, where I've developed expertise in LLM integration, ML pipelines, and data analysis. I'm actively seeking full-time opportunities where I can apply my technical skills and contribute to impactful projects.",
 };
 const worktimeline = [
     {
-        jobtitle: "Quantitative Researcher",
+        jobtitle: "Quantitative Analyst",
         where: "Trexquant Investment LP",
-        date: "September 2024 - December 2025",
+        date: "August 2024 - December 2024",
     },
     {
-        jobtitle: "ML Engineer",
+        jobtitle: "System Engineer",
         where: "ODAIA",
-        date: "January 2024 - April 2024",
+        date: "January 2024 - May 2024",
     },
     {
-        jobtitle: "AI/ML Engineer",
+        jobtitle: "Data Systems Analyst",
         where: "Genellipse",
         date: "September 2022 - December 2023",
     },
@@ -77,20 +77,20 @@ const skills = [{
 ];
 
 const services = [{
-        title: "Applied AI",
-        description: "My passion for Applied AI and leveraging its problem-solving capabilities is a driving force that fuels my desire to contribute to the advancement of this transformative technology. Throughout my career, I aspire to make a significant positive impact on the world through AI's practical applications.",
+        title: "Quantitative Analysis",
+        description: "I specialize in quantitative analysis and research, with experience at Trexquant Investment LP analyzing research workflows, optimizing alpha signals, and designing forecasting systems for large stock universes. My work involves improving information ratios and validating performance with live trading data.",
     },
     {
-        title: "Web/Game Development",
-        description: "Developing multiplayer games is one of my favorite pastimes. I believe that these games offer an exciting opportunity for people to come together and have fun as a group. They're not just about entertainment; they also promote teamwork and cooperation among players, making them a fantastic team-building activity.",
+        title: "System Engineering",
+        description: "I have experience designing and implementing knowledge-retrieval systems, ML serving architectures, and data pipelines. At ODAIA, I built LangChain + GPT systems for pharmaceutical sales forecasts and re-engineered ML serving architecture to improve cost efficiency by 65%.",
     },
     {
-        title: "Quantitative Trading",
-        description: " I've always had a keen interest in capital markets and trading. Exploring these areas has become a personal passion of mine. I spend a significant amount of time reading, studying, and staying up-to-date on financial news to satisfy my curiosity and deepen my knowledge.",
+        title: "Data Systems & Analytics",
+        description: "I specialize in building information retrieval systems using LlamaIndex and FAISS, analyzing system accuracy issues, and optimizing data ingestion pipelines. My work at Genellipse involved synthesizing SEC filings, insurance policies, and clinical guidelines while reducing false positives by 30%.",
     },
     {
-        title: "Music Production",
-        description: "As a hobbyist, I enjoy creating EDM mixes in my free time. This creative outlet allows me to experiment with various sounds and styles, giving me the freedom to craft unique and engaging musical compositions..",
+        title: "Machine Learning & AI",
+        description: "I have extensive experience with LLM integration, retrieval-augmented pipelines, and ML model optimization. My work spans across finance, healthcare, and pharmaceutical industries, focusing on practical AI applications and system improvements.",
     },
 ];
 
