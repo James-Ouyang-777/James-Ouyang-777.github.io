@@ -128,6 +128,11 @@ const dataportfolio = [
         description: "Computer Vision Animal Identifier",
         link: "https://github.com/James-Ouyang-777/CVPets",
     },
+    {
+        img: require("./assets/images/icon1.png"),
+        description: "Flappy Bird: A playable Flappy Bird clone built with React + HTML5 Canvas",
+        link: "/game",
+    },
 
     // {
     //     img: "https://picsum.photos/400/300/?grayscale",

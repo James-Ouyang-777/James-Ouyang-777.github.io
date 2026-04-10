@@ -6,6 +6,7 @@ import { Portfolio } from "../pages/portfolio";
 import { ContactUs } from "../pages/contact";
 
 import { Donna } from "../pages/Donna";
+import { FlappyGame } from "../pages/game";
 
 import { About } from "../pages/about";
 import { Socialicons } from "../components/socialicons";
@@ -28,6 +29,7 @@ const AnimatedRoutes = withRouter(({ location }) => (
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/donna" element={<Donna />} />
+        <Route path="/game" element={<FlappyGame />} />
 
         <Route path="*" element={<Home />} />
       </Routes>
