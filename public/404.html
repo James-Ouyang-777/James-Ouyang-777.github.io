@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>James Ouyang</title>
+    <script>
+      // SPA routing fix for GitHub Pages
+      // Encodes the path into a query string so GitHub serves index.html,
+      // then the script in index.html decodes it back.
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.host + '/?/' +
+        l.pathname.slice(1).replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
