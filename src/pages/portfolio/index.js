@@ -3,7 +3,6 @@ import "./style.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Container, Row, Col } from "react-bootstrap";
 import { dataportfolio, meta } from "../../content_option";
-import { Donna } from "../Donna";
 import { Link } from "react-router-dom";
 
 
@@ -32,8 +31,8 @@ export const Portfolio = () => {
                 <img src={data.img} alt="" />
                 <div className="content">
                   <p>{data.description}</p>
-                  {i === 0 ? (
-                    <Link to="/donna" className="my-3">
+                  {data.link.startsWith('/') && !data.link.startsWith('//') ? (
+                    <Link to={data.link} className="my-3">
                       view project
                     </Link>
                   ) : (

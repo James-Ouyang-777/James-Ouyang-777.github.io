@@ -5,6 +5,7 @@ import Typewriter from "typewriter-effect";
 import { introdata, meta } from "../../content_option";
 import { Link } from "react-router-dom";
 import avatar from '../../assets/images/avatar.jpg'
+import { GeometricCanvas } from "../../components/GeometricCanvas";
 
 export const Home = () => {
   return (
@@ -16,6 +17,7 @@ export const Home = () => {
           <meta name="description" content={meta.description} />
         </Helmet>
         <div className="intro_sec d-block d-lg-flex align-items-center ">
+          <GeometricCanvas />
           <div
             className="h_bg-image order-1 order-lg-2 h-100 "
             style={{ backgroundImage: `url(${avatar})` }}

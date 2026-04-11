@@ -1,0 +1,20 @@
+.game__canvas {
+    display: block;
+    border: 2px solid var(--secondary-color);
+    border-radius: 10px;
+    cursor: pointer;
+    touch-action: none;
+    max-width: 100%;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.game__canvas:focus {
+    outline: none;
+}
+
+.game__hint {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
+    opacity: 0.5;
+}

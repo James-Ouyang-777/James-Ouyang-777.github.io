@@ -35,6 +35,17 @@ section {
     min-height: 700px;
     height: 100vh;
     margin-top: -60px;
+    position: relative;
+}
+
+.geometric-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
 }
 
 @media (max-width:991.98px) {
@@ -47,6 +58,8 @@ section {
 .intro_sec .text,
 .intro_sec .h_bg-image {
     width: 50%;
+    position: relative;
+    z-index: 1;
 }
 
 @media (max-width:991.98px) {
