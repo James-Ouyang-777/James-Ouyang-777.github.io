@@ -14,30 +14,68 @@ const PIPE_SPEED = 2.4;
 const PIPE_INTERVAL = 88;
 const BIRD_X = 80;
 const BIRD_RADIUS = 13;
-const LS_KEY = "flappy_leaderboard";
 const MAX_SCORES = 10;
+const LS_CACHE_KEY = "flappy_leaderboard_cache";
 
-const loadLeaderboard = () => {
+// ── JSONBin helpers ──────────────────────────────────────────────────────────
+const BIN_ID = process.env.REACT_APP_JSONBIN_BIN_ID;
+const API_KEY = process.env.REACT_APP_JSONBIN_API_KEY;
+const BIN_URL = BIN_ID ? `https://api.jsonbin.io/v3/b/${BIN_ID}` : null;
+const HEADERS = {
+  "Content-Type": "application/json",
+  "X-Master-Key": API_KEY || "",
+};
+
+const readCache = () => {
   try {
-    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+    return JSON.parse(localStorage.getItem(LS_CACHE_KEY)) || [];
   } catch {
     return [];
   }
 };
 
+const writeCache = (board) => {
+  try {
+    localStorage.setItem(LS_CACHE_KEY, JSON.stringify(board));
+  } catch { /* ignore */ }
+};
+
+const fetchLeaderboard = async () => {
+  if (!BIN_URL) return readCache();
+  try {
+    const res = await fetch(`${BIN_URL}/latest`, { headers: HEADERS });
+    if (!res.ok) throw new Error("fetch failed");
+    const data = await res.json();
+    const board = data.record?.leaderboard || [];
+    writeCache(board);
+    return board;
+  } catch {
+    return readCache(); // fall back to local cache
+  }
+};
+
+const pushScore = async (name, score, currentBoard) => {
+  const updated = [...currentBoard, { name: name.trim() || "Anonymous", score }]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, MAX_SCORES);
+  writeCache(updated); // always update local cache first
+  if (BIN_URL) {
+    try {
+      await fetch(BIN_URL, {
+        method: "PUT",
+        headers: HEADERS,
+        body: JSON.stringify({ leaderboard: updated }),
+      });
+    } catch { /* silent fail — local cache already updated */ }
+  }
+  return updated;
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const qualifies = (score, board) => {
   if (score === 0) return false;
   if (board.length < MAX_SCORES) return true;
   return score > board[board.length - 1].score;
-};
-
-const persistScore = (name, score) => {
-  const board = loadLeaderboard();
-  board.push({ name: name.trim() || "Anonymous", score });
-  board.sort((a, b) => b.score - a.score);
-  const trimmed = board.slice(0, MAX_SCORES);
-  localStorage.setItem(LS_KEY, JSON.stringify(trimmed));
-  return trimmed;
 };
 
 const MEDALS = ["🥇", "🥈", "🥉"];
@@ -47,11 +85,27 @@ export const FlappyGame = () => {
   const gameStateRef = useRef("idle"); // idle | playing | gameover | name_entry
   const finalScoreRef = useRef(0);
   const gameoverTimeRef = useRef(0);
+  const leaderboardRef = useRef([]); // sync copy for game loop
 
   const [uiState, setUiState] = useState("idle");
-  const [leaderboard, setLeaderboard] = useState(loadLeaderboard);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [nameInput, setNameInput] = useState("");
   const nameInputRef = useRef(null);
+
+  // Load leaderboard from JSONBin on mount
+  useEffect(() => {
+    fetchLeaderboard().then((board) => {
+      leaderboardRef.current = board;
+      setLeaderboard(board);
+      setLoading(false);
+    });
+  }, []);
+
+  // Keep ref in sync with state (for game loop access)
+  useEffect(() => {
+    leaderboardRef.current = leaderboard;
+  }, [leaderboard]);
 
   // Auto-focus the name field when it appears
   useEffect(() => {
@@ -60,8 +114,9 @@ export const FlappyGame = () => {
     }
   }, [uiState]);
 
-  const submitName = useCallback(() => {
-    const newBoard = persistScore(nameInput, finalScoreRef.current);
+  const submitName = useCallback(async () => {
+    const newBoard = await pushScore(nameInput, finalScoreRef.current, leaderboardRef.current);
+    leaderboardRef.current = newBoard;
     setLeaderboard(newBoard);
     setNameInput("");
     gameStateRef.current = "idle";
@@ -257,8 +312,8 @@ export const FlappyGame = () => {
 
         if (checkCollision()) {
           finalScoreRef.current = score;
-          const board = loadLeaderboard();
-          if (qualifies(score, board)) {
+          // Use leaderboardRef so game loop always sees latest board
+          if (qualifies(score, leaderboardRef.current)) {
             gameStateRef.current = "name_entry";
             setUiState("name_entry");
           } else {
@@ -285,7 +340,6 @@ export const FlappyGame = () => {
       }
 
       if (state === "name_entry") {
-        // Canvas is frozen; React overlay handles input
         rafId = requestAnimationFrame(loop);
         return;
       }
@@ -295,7 +349,7 @@ export const FlappyGame = () => {
 
     const flap = () => {
       const state = gameStateRef.current;
-      if (state === "name_entry") return; // React UI handles this state
+      if (state === "name_entry") return;
       if (state === "idle") {
         resetGame();
         gameStateRef.current = "playing";
@@ -388,7 +442,9 @@ export const FlappyGame = () => {
           <Col xs={12} md="auto">
             <div className="game__leaderboard">
               <h5 className="game__lb-title">Top 10 Scores</h5>
-              {leaderboard.length === 0 ? (
+              {loading ? (
+                <p className="game__lb-empty">Loading…</p>
+              ) : leaderboard.length === 0 ? (
                 <p className="game__lb-empty">No scores yet — be the first!</p>
               ) : (
                 <table className="game__lb-table">
