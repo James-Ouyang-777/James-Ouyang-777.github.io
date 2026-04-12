@@ -17,7 +17,8 @@ export const GeometricCanvas = () => {
     const MOUSE_RADIUS = 130;
     const MOUSE_FORCE = 0.45;
     const MAX_SPEED = 1.4;
-    const FRICTION = 0.985;
+    const FRICTION = 0.992;
+    const DRIFT = 0.028;      // random nudge per frame — keeps nodes in perpetual motion
 
     let W = 0;
     let H = 0;
@@ -77,6 +78,10 @@ export const GeometricCanvas = () => {
           n.vx += (dx / d) * force;
           n.vy += (dy / d) * force;
         }
+
+        // Brownian drift — small random nudge keeps nodes in perpetual motion
+        n.vx += (Math.random() - 0.5) * DRIFT;
+        n.vy += (Math.random() - 0.5) * DRIFT;
 
         n.vx *= FRICTION;
         n.vy *= FRICTION;
