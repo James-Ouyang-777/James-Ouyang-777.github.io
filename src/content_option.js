@@ -133,6 +133,11 @@ const dataportfolio = [
         description: "Flappy Bird: A playable Flappy Bird clone built with React + HTML5 Canvas",
         link: "/game",
     },
+    {
+        img: require("./assets/images/icon1.png"),
+        description: "Airplane Landing: A 2D landing simulator — control throttle and pitch to touch down on the runway",
+        link: "/airplane",
+    },
 
     // {
     //     img: "https://picsum.photos/400/300/?grayscale",
