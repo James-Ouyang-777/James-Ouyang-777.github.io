@@ -12,12 +12,12 @@ const RUNWAY_X = 340;
 const RUNWAY_W = 162;
 
 // ── Physics constants ────────────────────────────────────────────────────────
-const GRAVITY = 0.054;
-const MAX_THRUST = 0.19;
-const LIFT_COEF = 0.034;   // upward force per unit of forward speed
-const DRAG = 0.991;
-const PITCH_RATE = 1.8;    // degrees per frame while key held
-const THR_RATE = 0.85;     // throttle % per frame
+const GRAVITY = 0.065;
+const MAX_THRUST = 0.26;
+const LIFT_COEF = 0.015;   // upward force per unit of forward speed
+const DRAG = 0.958;
+const PITCH_RATE = 2.5;    // degrees per frame while key held
+const THR_RATE = 1.1;      // throttle % per frame
 
 // ── Landing thresholds ───────────────────────────────────────────────────────
 const SAFE_VY = 1.85;
@@ -58,7 +58,7 @@ export const AirplaneLanding = () => {
   const [uiState, setUiState] = useState("idle");
   const [result, setResult] = useState({ success: false, score: 0, msg: "" });
 
-  const makePlane = () => ({ x: 55, y: 100, vx: 2.0, vy: 0.08, angle: 0, throttle: 62 });
+  const makePlane = () => ({ x: 55, y: 100, vx: 2.8, vy: 0.05, angle: 3, throttle: 65 });
 
   const startFlight = useCallback(() => {
     planeRef.current = makePlane();
@@ -340,8 +340,8 @@ export const AirplaneLanding = () => {
         // Controls
         if (keys["w"] || keys["arrowup"])    plane.throttle = Math.min(100, plane.throttle + THR_RATE);
         if (keys["s"] || keys["arrowdown"])  plane.throttle = Math.max(0,   plane.throttle - THR_RATE);
-        if (keys["a"] || keys["arrowleft"])  plane.angle -= PITCH_RATE;
-        if (keys["d"] || keys["arrowright"]) plane.angle += PITCH_RATE;
+        if (keys["a"] || keys["arrowleft"])  plane.angle += PITCH_RATE;
+        if (keys["d"] || keys["arrowright"]) plane.angle -= PITCH_RATE;
         plane.angle = Math.max(-75, Math.min(75, plane.angle));
 
         // Physics (angle > 0 = nose up)
