@@ -8,8 +8,9 @@ import { meta } from "../../content_option";
 const CW = 540;
 const CH = 320;
 const GROUND_Y = 270;
-const RUNWAY_X = 340;
+const RUNWAY_X = 2600;   // world x — plane flies right to reach it
 const RUNWAY_W = 162;
+const CAMERA_LEAD = 160; // plane's screen x while in flight
 
 // ── Physics constants ────────────────────────────────────────────────────────
 const GRAVITY = 0.065;
@@ -23,12 +24,16 @@ const THR_RATE = 1.1;      // throttle % per frame
 const SAFE_VY = 1.85;
 const SAFE_ANGLE = 22;
 
-// ── Decorative clouds (static, CSS-pixel coords) ─────────────────────────────
+// ── Decorative clouds (world x coords) ───────────────────────────────────────
 const CLOUDS = [
-  { x: 88,  y: 52,  rx: 28, ry: 10 },
-  { x: 210, y: 36,  rx: 22, ry:  8 },
-  { x: 360, y: 58,  rx: 32, ry: 12 },
-  { x: 490, y: 40,  rx: 20, ry:  7 },
+  { x:  180, y: 52, rx: 28, ry: 10 },
+  { x:  480, y: 38, rx: 35, ry: 13 },
+  { x:  820, y: 55, rx: 22, ry:  8 },
+  { x: 1150, y: 35, rx: 30, ry: 11 },
+  { x: 1480, y: 50, rx: 26, ry:  9 },
+  { x: 1780, y: 40, rx: 20, ry:  7 },
+  { x: 2100, y: 58, rx: 32, ry: 12 },
+  { x: 2420, y: 44, rx: 24, ry:  8 },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -58,7 +63,7 @@ export const AirplaneLanding = () => {
   const [uiState, setUiState] = useState("idle");
   const [result, setResult] = useState({ success: false, score: 0, msg: "" });
 
-  const makePlane = () => ({ x: 55, y: 100, vx: 2.8, vy: 0.05, angle: 3, throttle: 65 });
+  const makePlane = () => ({ x: -100, y: 90, vx: 2.8, vy: 0.05, angle: 3, throttle: 65 });
 
   const startFlight = useCallback(() => {
     planeRef.current = makePlane();
@@ -103,48 +108,54 @@ export const AirplaneLanding = () => {
       });
     };
 
-    const drawClouds = () => {
+    const drawClouds = (camX) => {
       ctx.fillStyle = "rgba(180,210,255,0.09)";
       for (const c of CLOUDS) {
+        const sx = c.x - camX;
+        if (sx < -100 || sx > CW + 100) continue;
         ctx.beginPath();
-        ctx.ellipse(c.x,            c.y,         c.rx,       c.ry,       0, 0, Math.PI * 2);
-        ctx.ellipse(c.x + c.rx*0.5, c.y - c.ry*0.4, c.rx*0.6, c.ry*0.7, 0, 0, Math.PI * 2);
-        ctx.ellipse(c.x - c.rx*0.4, c.y - c.ry*0.3, c.rx*0.5, c.ry*0.6, 0, 0, Math.PI * 2);
+        ctx.ellipse(sx,              c.y,             c.rx,       c.ry,       0, 0, Math.PI * 2);
+        ctx.ellipse(sx + c.rx * 0.5, c.y - c.ry*0.4, c.rx*0.6,   c.ry*0.7,  0, 0, Math.PI * 2);
+        ctx.ellipse(sx - c.rx * 0.4, c.y - c.ry*0.3, c.rx*0.5,   c.ry*0.6,  0, 0, Math.PI * 2);
         ctx.fill();
       }
     };
 
-    const drawGround = () => {
-      // Grass
+    const drawGround = (camX) => {
+      // Grass (always full canvas width)
       const g = ctx.createLinearGradient(0, GROUND_Y, 0, CH);
       g.addColorStop(0, "#1a3a1a");
       g.addColorStop(1, "#0c1e0c");
       ctx.fillStyle = g;
       ctx.fillRect(0, GROUND_Y, CW, CH - GROUND_Y);
 
+      const rsx = RUNWAY_X - camX; // runway start in screen coords
+      if (rsx > CW + 20 || rsx + RUNWAY_W < -20) return; // off-screen
+
       // Runway base
       ctx.fillStyle = "#252525";
-      ctx.fillRect(RUNWAY_X, GROUND_Y - 7, RUNWAY_W, 11);
+      ctx.fillRect(rsx, GROUND_Y - 7, RUNWAY_W, 11);
 
       // Runway shoulder lines
       ctx.strokeStyle = "#555";
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(RUNWAY_X, GROUND_Y - 7);
-      ctx.lineTo(RUNWAY_X, GROUND_Y + 4);
-      ctx.moveTo(RUNWAY_X + RUNWAY_W, GROUND_Y - 7);
-      ctx.lineTo(RUNWAY_X + RUNWAY_W, GROUND_Y + 4);
+      ctx.moveTo(rsx,            GROUND_Y - 7);
+      ctx.lineTo(rsx,            GROUND_Y + 4);
+      ctx.moveTo(rsx + RUNWAY_W, GROUND_Y - 7);
+      ctx.lineTo(rsx + RUNWAY_W, GROUND_Y + 4);
       ctx.stroke();
 
       // Centerline dashes
       ctx.fillStyle = "#ffffff";
-      for (let mx = RUNWAY_X + 16; mx < RUNWAY_X + RUNWAY_W - 8; mx += 22) {
+      for (let mx = rsx + 16; mx < rsx + RUNWAY_W - 8; mx += 22) {
         ctx.fillRect(mx, GROUND_Y - 1.5, 14, 3);
       }
 
       // Edge lights
-      for (let lx = RUNWAY_X; lx <= RUNWAY_X + RUNWAY_W; lx += 20) {
-        ctx.fillStyle = lx === RUNWAY_X || lx === RUNWAY_X + RUNWAY_W ? "#ff4444" : "#ffee55";
+      for (let i = 0; i * 20 <= RUNWAY_W; i++) {
+        const lx = rsx + i * 20;
+        ctx.fillStyle = i === 0 || i * 20 >= RUNWAY_W - 5 ? "#ff4444" : "#ffee55";
         ctx.shadowColor = ctx.fillStyle;
         ctx.shadowBlur = 5;
         ctx.beginPath();
@@ -154,10 +165,11 @@ export const AirplaneLanding = () => {
       }
     };
 
-    const drawPAPI = (plane) => {
+    const drawPAPI = (plane, camX) => {
       // 4 PAPI approach lights left of runway threshold
-      const px = RUNWAY_X - 18;
+      const px = RUNWAY_X - 18 - camX;
       const py = GROUND_Y - 8;
+      if (px < -30 || px > CW + 10) return; // off-screen
       // actual glidepath angle from plane to runway
       const dx = RUNWAY_X - plane.x;
       const dy = plane.y - GROUND_Y; // positive = above ground
@@ -178,9 +190,9 @@ export const AirplaneLanding = () => {
       }
     };
 
-    const drawPlane = (plane) => {
+    const drawPlane = (plane, camX) => {
       ctx.save();
-      ctx.translate(plane.x, plane.y);
+      ctx.translate(plane.x - camX, plane.y);
       ctx.rotate(-plane.angle * Math.PI / 180); // positive angle = nose up
 
       // Engine exhaust flame
@@ -274,10 +286,12 @@ export const AirplaneLanding = () => {
       const vsColor = plane.vy > SAFE_VY * 0.8 ? "#ff7755" : "#6fd49a";
       const hdgColor = Math.abs(plane.angle) > SAFE_ANGLE * 0.8 ? "#ff7755" : "#6fd49a";
       const windKts = (windRef.current * 100).toFixed(1);
+      const dist = Math.max(0, Math.round(RUNWAY_X - plane.x));
+      const distColor = dist < 400 ? "#ffd070" : "#8ab8d4";
 
       // HUD box
       ctx.fillStyle = "rgba(0,5,15,0.52)";
-      roundRect(ctx, 8, 8, 142, 106, 7);
+      roundRect(ctx, 8, 8, 142, 122, 7);
       ctx.fill();
       ctx.strokeStyle = "rgba(100,180,255,0.15)";
       ctx.lineWidth = 0.8;
@@ -286,12 +300,13 @@ export const AirplaneLanding = () => {
       ctx.font = "bold 11px 'Courier New', monospace";
       ctx.textAlign = "left";
       const rows = [
-        { label: "SPD", val: `${spd} kn`,             color: "#6fd49a" },
-        { label: "V/S", val: `${descending?"↓":"↑"}${Math.abs(plane.vy).toFixed(2)}`, color: vsColor },
-        { label: "ALT", val: `${alt} ft`,              color: "#6fd49a" },
-        { label: "HDG", val: `${plane.angle.toFixed(0)}°`, color: hdgColor },
-        { label: "THR", val: `${plane.throttle.toFixed(0)}%`, color: "#6fd49a" },
-        { label: "WND", val: windKts,                  color: "#8ab8d4" },
+        { label: "SPD",  val: `${spd} kn`,                                          color: "#6fd49a" },
+        { label: "V/S",  val: `${descending?"↓":"↑"}${Math.abs(plane.vy).toFixed(2)}`, color: vsColor },
+        { label: "ALT",  val: `${alt} ft`,                                           color: "#6fd49a" },
+        { label: "HDG",  val: `${plane.angle.toFixed(0)}°`,                          color: hdgColor },
+        { label: "THR",  val: `${plane.throttle.toFixed(0)}%`,                       color: "#6fd49a" },
+        { label: "WND",  val: windKts,                                               color: "#8ab8d4" },
+        { label: "DIST", val: `${dist}`,                                             color: distColor },
       ];
       rows.forEach(({ label, val, color }, i) => {
         ctx.fillStyle = "rgba(120,160,200,0.6)";
@@ -313,13 +328,13 @@ export const AirplaneLanding = () => {
       ctx.fillText("T", CW - 18, 128);
     };
 
-    const drawScene = (plane) => {
+    const drawScene = (plane, camX) => {
       drawSky();
       drawStars();
-      drawClouds();
-      drawGround();
-      drawPAPI(plane);
-      drawPlane(plane);
+      drawClouds(camX);
+      drawGround(camX);
+      drawPAPI(plane, camX);
+      drawPlane(plane, camX);
     };
 
     // ── Main loop ─────────────────────────────────────────────────────────────
@@ -328,7 +343,8 @@ export const AirplaneLanding = () => {
       const plane = planeRef.current;
 
       if (state === "idle" || state === "result") {
-        drawScene(plane);
+        const camX = plane.x - CAMERA_LEAD;
+        drawScene(plane, camX);
         rafId = requestAnimationFrame(loop);
         return;
       }
@@ -384,13 +400,14 @@ export const AirplaneLanding = () => {
         }
 
         // Out of bounds
-        if (plane.x < -70 || plane.x > CW + 70 || plane.y < -130) {
+        if (plane.x > RUNWAY_X + RUNWAY_W + 300 || plane.y < -160) {
           setResult({ success: false, score: 0, msg: "Out of bounds!" });
           gameStateRef.current = "result";
           setUiState("result");
         }
 
-        drawScene(plane);
+        const camX = plane.x - CAMERA_LEAD;
+        drawScene(plane, camX);
         drawHUD(plane);
         rafId = requestAnimationFrame(loop);
       }
