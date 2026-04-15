@@ -24,6 +24,55 @@ const THR_RATE = 1.1;      // throttle % per frame
 const SAFE_VY = 1.85;
 const SAFE_ANGLE = 22;
 
+// ── Explosion ────────────────────────────────────────────────────────────────
+const EXPLOSION_FRAMES = 110;
+
+const createExplosion = (x, y) => {
+  const particles = [];
+  // 45 sparks: fast, orange/yellow, short-lived
+  for (let i = 0; i < 45; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 7;
+    particles.push({
+      type: "spark", x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 1.5,
+      life: 25 + Math.floor(Math.random() * 35), maxLife: 60,
+      size: 1.5 + Math.random() * 3,
+      color: Math.random() > 0.4 ? "255,200,50" : "255,100,20",
+    });
+  }
+  // 14 debris: heavier, tumbles, gravity-affected
+  for (let i = 0; i < 14; i++) {
+    const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.5;
+    const speed = 1.5 + Math.random() * 4.5;
+    particles.push({
+      type: "debris", x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 2.5,
+      life: 55 + Math.floor(Math.random() * 45), maxLife: 100,
+      size: 4 + Math.random() * 7,
+      rotation: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.2,
+      color: i % 3 === 0 ? "180,170,160" : i % 3 === 1 ? "70,55,40" : "100,90,80",
+    });
+  }
+  // 18 smoke: large, dark, rising slowly
+  for (let i = 0; i < 18; i++) {
+    particles.push({
+      type: "smoke",
+      x: x + (Math.random() - 0.5) * 25,
+      y: y + (Math.random() - 0.5) * 12,
+      vx: (Math.random() - 0.5) * 1.2,
+      vy: -(0.3 + Math.random() * 1.2),
+      life: 70 + Math.floor(Math.random() * 50), maxLife: 120,
+      size: 10 + Math.random() * 22,
+      color: Math.random() > 0.5 ? "50,50,50" : "35,35,35",
+    });
+  }
+  return { x, y, frame: 0, particles };
+};
+
 // ── Decorative clouds (world x coords) ───────────────────────────────────────
 const CLOUDS = [
   { x:  180, y: 52, rx: 28, ry: 10 },
@@ -59,6 +108,8 @@ export const AirplaneLanding = () => {
   const planeRef = useRef(null);
   const windRef = useRef(0);
   const frameRef = useRef(0);
+  const explosionRef = useRef(null);
+  const pendingResultRef = useRef(null);
 
   const [uiState, setUiState] = useState("idle");
   const [result, setResult] = useState({ success: false, score: 0, msg: "" });
@@ -67,6 +118,8 @@ export const AirplaneLanding = () => {
 
   const startFlight = useCallback(() => {
     planeRef.current = makePlane();
+    explosionRef.current = null;
+    pendingResultRef.current = null;
     windRef.current = (Math.random() - 0.5) * 0.032;
     frameRef.current = 0;
     gameStateRef.current = "flying";
@@ -337,6 +390,83 @@ export const AirplaneLanding = () => {
       drawPlane(plane, camX);
     };
 
+    const drawExplosion = (exp, camX) => {
+      const sx = exp.x - camX;
+      const sy = exp.y;
+      const t = exp.frame;
+
+      // Full-screen flash (frames 0-12)
+      if (t < 12) {
+        const a = Math.pow(1 - t / 12, 1.5) * 0.85;
+        ctx.fillStyle = `rgba(255,210,80,${a.toFixed(3)})`;
+        ctx.fillRect(0, 0, CW, CH);
+      }
+
+      // Shockwave ring (frames 0-22)
+      if (t < 22) {
+        const r = t * 9 + 4;
+        const a = 1 - t / 22;
+        ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,160,30,${(a * 0.9).toFixed(3)})`;
+        ctx.lineWidth = Math.max(0.5, 5 - t * 0.2);
+        ctx.stroke();
+      }
+
+      // Second delayed ring (frames 8-28)
+      if (t > 8 && t < 28) {
+        const r = (t - 8) * 7 + 2;
+        const a = 1 - (t - 8) / 20;
+        ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,100,20,${(a * 0.6).toFixed(3)})`;
+        ctx.lineWidth = Math.max(0.5, 3 - (t - 8) * 0.15);
+        ctx.stroke();
+      }
+
+      // Core fireball (frames 0-30)
+      if (t < 30) {
+        const r = Math.max(0, 18 - t * 0.5);
+        const a = 1 - t / 30;
+        const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r * 2);
+        grad.addColorStop(0, `rgba(255,255,200,${a.toFixed(3)})`);
+        grad.addColorStop(0.4, `rgba(255,160,30,${(a * 0.8).toFixed(3)})`);
+        grad.addColorStop(1, "transparent");
+        ctx.beginPath(); ctx.arc(sx, sy, r * 2, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      // Particles
+      for (const p of exp.particles) {
+        if (p.life <= 0) continue;
+        const alpha = p.life / p.maxLife;
+        const psx = p.x - camX;
+        if (p.type === "spark") {
+          ctx.beginPath();
+          ctx.arc(psx, p.y, Math.max(0.3, p.size * alpha), 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color},${alpha.toFixed(3)})`;
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(psx, p.y);
+          ctx.lineTo(psx - p.vx * 2, p.y - p.vy * 2);
+          ctx.strokeStyle = `rgba(${p.color},${(alpha * 0.4).toFixed(3)})`;
+          ctx.lineWidth = p.size * 0.4;
+          ctx.stroke();
+        } else if (p.type === "debris") {
+          ctx.save();
+          ctx.translate(psx, p.y);
+          ctx.rotate(p.rotation + exp.frame * p.spin);
+          ctx.fillStyle = `rgba(${p.color},${(alpha * 0.95).toFixed(3)})`;
+          ctx.fillRect(-p.size / 2, -p.size * 0.2, p.size, p.size * 0.4);
+          ctx.restore();
+        } else if (p.type === "smoke") {
+          ctx.beginPath();
+          ctx.arc(psx, p.y, p.size * (1.2 - alpha * 0.5), 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color},${(alpha * 0.28).toFixed(3)})`;
+          ctx.fill();
+        }
+      }
+    };
+
     // ── Main loop ─────────────────────────────────────────────────────────────
     const loop = () => {
       const state = gameStateRef.current;
@@ -345,6 +475,27 @@ export const AirplaneLanding = () => {
       if (state === "idle" || state === "result") {
         const camX = plane.x - CAMERA_LEAD;
         drawScene(plane, camX);
+        rafId = requestAnimationFrame(loop);
+        return;
+      }
+
+      if (state === "exploding") {
+        const exp = explosionRef.current;
+        exp.frame++;
+        for (const p of exp.particles) {
+          if (p.life <= 0) continue;
+          p.x += p.vx; p.y += p.vy;
+          p.vy += 0.13; p.vx *= 0.97; p.vy *= 0.97;
+          p.life--;
+        }
+        const camX = exp.x - CAMERA_LEAD;
+        drawScene(planeRef.current, camX);
+        drawExplosion(exp, camX);
+        if (exp.frame >= EXPLOSION_FRAMES) {
+          setResult(pendingResultRef.current);
+          gameStateRef.current = "result";
+          setUiState("result");
+        }
         rafId = requestAnimationFrame(loop);
         return;
       }
@@ -393,17 +544,17 @@ export const AirplaneLanding = () => {
             let msg = "Missed the runway!";
             if (onRunway && !safeVspeed) msg = "Came in too fast!";
             else if (onRunway && !safeAngle) msg = "Too much nose tilt!";
-            setResult({ success: false, score: 0, msg });
-            gameStateRef.current = "result";
-            setUiState("result");
+            pendingResultRef.current = { success: false, score: 0, msg };
+            explosionRef.current = createExplosion(plane.x, plane.y);
+            gameStateRef.current = "exploding";
           }
         }
 
         // Out of bounds
         if (plane.x > RUNWAY_X + RUNWAY_W + 300 || plane.y < -160) {
-          setResult({ success: false, score: 0, msg: "Out of bounds!" });
-          gameStateRef.current = "result";
-          setUiState("result");
+          pendingResultRef.current = { success: false, score: 0, msg: "Out of bounds!" };
+          explosionRef.current = createExplosion(plane.x, Math.max(plane.y, 10));
+          gameStateRef.current = "exploding";
         }
 
         const camX = plane.x - CAMERA_LEAD;
