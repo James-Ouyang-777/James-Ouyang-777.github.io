@@ -33,7 +33,7 @@ export const Home = () => {
                         introdata.animated.first,
                         introdata.animated.second,
                         introdata.animated.third,
-                      ],
+                      ].filter(Boolean),
                       autoStart: true,
                       loop: true,
                       deleteSpeed: 15,

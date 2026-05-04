@@ -245,3 +245,14 @@ section {
 .intro_sec .h_bg-image {
     /* filter: saturate(0.5); */
 }
+
+.Typewriter__cursor {
+    font-weight: 200;
+    color: var(--primary-color);
+    animation: cursor-blink 0.75s ease-in-out infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
