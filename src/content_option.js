@@ -129,12 +129,12 @@ const dataportfolio = [
         link: "https://github.com/James-Ouyang-777/CVPets",
     },
     {
-        img: require("./assets/images/icon1.png"),
+        img: require("./assets/images/flappy-thumb.png"),
         description: "Flappy Bird: A playable Flappy Bird clone built with React + HTML5 Canvas",
         link: "/game",
     },
     {
-        img: require("./assets/images/icon1.png"),
+        img: require("./assets/images/airplane-thumb.png"),
         description: "Airplane Landing: A 2D landing simulator — control throttle and pitch to touch down on the runway",
         link: "/airplane",
     },
