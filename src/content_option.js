@@ -16,7 +16,7 @@ const introdata = {
 };
 
 const dataabout = {
-    title: "A bit about my self",
+    title: "A bit about myself",
     aboutme: "I am a Computer Science graduate from the University of Waterloo with experience in quantitative analysis, system engineering, and data systems. I have worked at companies like Trexquant Investment LP, ODAIA, and Genellipse, where I've developed expertise in LLM integration, ML pipelines, and data analysis. I'm actively seeking full-time opportunities where I can apply my technical skills and contribute to impactful projects.",
 };
 const worktimeline = [

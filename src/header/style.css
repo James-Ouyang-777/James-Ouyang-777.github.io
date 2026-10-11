@@ -1,7 +1,7 @@
 .site__header {
-    top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    top: 0;
+    padding: 10px 10px 0;
+    background: var(--primary-color);
 }
 
 .menu__button {
